@@ -1,9 +1,9 @@
 class runall_sequence extends uvm_sequence #(uvm_sequence_item);
   `uvm_object_utils(runall_sequence)
 
-  protected random_sequence random;
-  protected sequencer sequencer_h;
-  protected uvm_component uvm_component_h;
+random_sequence random;
+ sequencer sequencer_h;
+ uvm_component uvm_component_h;
 
   function new(string name = "runall_sequence");
     super.new(name);
