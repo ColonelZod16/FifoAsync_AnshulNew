@@ -24,10 +24,14 @@ class scoreboard extends uvm_subscriber #(output_flow_transaction);
 
     input_flow_f.try_get(input_flow);
     expected = expected_output_flow(input_flow);
+    data_str = {                     input_flow.convert2string(), 
+                  " ==>  Actual "  , t.convert2string(), 
+                  "/expected "     , expected.convert2string()};
 
     if (!expected.compare(t))
-      `uvm_error("SCOREBOARD", "")
+      `uvm_error("SCOREBOARD SELF CHECKER", {"FAIL: ", data_str})
     else
-      `uvm_info("SCOREBOARD", "", UVM_LOW)
+      `uvm_info ("SCOREBOARD SELF CHECKER", {"PASS: ", data_str}, UVM_LOW)
+
   endfunction
 endclass
