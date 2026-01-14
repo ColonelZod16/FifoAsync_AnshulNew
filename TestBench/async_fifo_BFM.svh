@@ -25,27 +25,27 @@ interface async_fifo_bfm;
     rinc = 1'b0;
     rrst_n = 1'b0;
     repeat(5) @(posedge wclk);
-    wrst_n = 1'b1;
+    wrst_n = 1'b1;   //deassert write reset
     repeat(1) @(posedge rclk);
-    #2 rrst_n = 1'b1;
-    repeat(2) @(posedge rclk);
+    #2 rrst_n = 1'b1;   //deassert read reset after the clock edge to avoid metastability
+    repeat(2) @(posedge rclk);  //let signals stabilize
   endtask
 
   task push(input bit [FIFO_DATA_WIDTH-1:0] data, input bit last);
-    @ (negedge wclk);
+    @ (negedge wclk);   //doing at negedge because FIFO writing at posedge so data will be stable for half a cycle before the write posedge
     while (wfull) begin
       winc  = 0;
-      wdata = 0;
+      wdata = 0;   //waiting for FIFO to not be full
       @ (negedge wclk);
     end
-    winc  = 1;
+    winc  = 1;    
     wdata = data;
 
-    if (last) begin
+    if (last) begin    //handling the last write of the burst
       @ (negedge wclk);
       winc  = 0;
       wdata = 0;
-      repeat (10) @ (posedge wclk);
+      repeat (10) @ (posedge wclk);   //waiting for FIFO to stabilize
       wrDone = 1;
     end
   endtask
@@ -75,14 +75,14 @@ interface async_fifo_bfm;
   initial begin
     forever begin
       @ (posedge wclk iff winc);
-      if (input_flow_monitor_h != null)
+      if (input_flow_monitor_h != null)   //sent to monitor at posedge for stability of half cycle
         input_flow_monitor_h.write_to_monitor(wdata);
     end
   end
 
   output_flow_monitor output_flow_monitor_h;
   initial begin
-    forever begin
+    forever begin     //same here because reading is at posedge
       @ (negedge rclk iff rinc);
       if (output_flow_monitor_h != null)
         output_flow_monitor_h.write_to_monitor(rdata);
@@ -93,7 +93,7 @@ interface async_fifo_bfm;
     wclk = 0;
     rclk = 0;
     fork
-      forever #10ns wclk = ~wclk;
+      forever #10ns wclk = ~wclk;  //defining clock
       forever #35ns rclk = ~rclk;
     join
   end
