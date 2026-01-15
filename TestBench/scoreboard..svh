@@ -1,7 +1,7 @@
 class scoreboard extends uvm_subscriber #(output_flow_transaction);
   `uvm_component_utils(scoreboard)
 
-  uvm_tlm_analysis_fifo #(sequence_item) input_flow_f;
+  uvm_tlm_analysis_fifo #(sequence_item) input_flow_f;   //fifo used here as a queue to store input items and then are popped one by one for comparison in the scoreboard.
 
   function new (string name, uvm_component parent);
     super.new(name, parent);
