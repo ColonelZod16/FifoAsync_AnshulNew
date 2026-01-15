@@ -29,7 +29,7 @@ class driver extends uvm_driver #(sequence_item);
       if (i > TEST_FLOW_LENGTH-1) i = 0; //restarting the burst counter
     end
   endtask
-
+                                                                         //To add another pop driver, I would create a separate read sequencer and driver, connect them via TLM ports, and let both drivers share the same virtual FIFO interface.
   task pop();
     integer i = 0;
     forever begin
