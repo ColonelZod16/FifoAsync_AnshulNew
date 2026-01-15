@@ -17,7 +17,7 @@ class driver extends uvm_driver #(sequence_item);
     integer i = 0;
     forever begin 
       if (i < TEST_FLOW_LENGTH-2) begin   //checking for the last item to send the last signal as well so bfm can handle that case as well
-        seq_item_port.get_next_item(push);   //blocking call to get the next item from sequence
+        seq_item_port.get_next_item(push);   //blocking call to get the next item from sequence (can use try_next_item which is non blocking)
         bfm.push(push.wdata, 1'b0);
         seq_item_port.item_done();
       end else begin
