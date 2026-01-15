@@ -7,13 +7,13 @@ class random_sequence extends uvm_sequence #(sequence_item);
     super.new(name);
   endfunction
 
-  integer i = 0;
+  integer i = 0;    
   task body();
     repeat (TEST_NUM_ITER) begin
-      fifo_push = sequence_item::type_id::create("fifo_push");
-      start_item(fifo_push);
-      assert(fifo_push.randomize());
-      finish_item(fifo_push);
+      fifo_push = sequence_item::type_id::create("fifo_push");   //creates random transaction items which are sent to the sequencer
+      start_item(fifo_push);   //tells the sequencer that its readyu to send item . can be blocked if sequencer already sending an item
+      assert(fifo_push.randomize());  //randomizing the data
+      finish_item(fifo_push);  //send it off to the sequencer
       i++;
     end
   endtask
