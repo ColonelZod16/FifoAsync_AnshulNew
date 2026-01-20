@@ -13,7 +13,7 @@ class random_sequence extends uvm_sequence #(sequence_item);
       fifo_push = sequence_item::type_id::create("fifo_push");   //creates random transaction items which are sent to the sequencer
       start_item(fifo_push);   //tells the sequencer that its readyu to send item . can be blocked if sequencer already sending an item
       assert(fifo_push.randomize());  //randomizing the data
-      finish_item(fifo_push);  //send it off to the sequencer
+      finish_item(fifo_push);  //passing to the driver , can block the driver until transfer is complete.
       i++;
     end
   endtask
